@@ -1,21 +1,28 @@
+
 import React from 'react';
+import Dropdown from './ui/Dropdown';
 import { COUNTRIES } from '../utils/constants';
 import { useNews } from '../contexts/NewsContext';
 
 const CountryFilter = () => {
-  const { getHeadlines } = useNews();
+  const { getHeadlines, currentCountry } = useNews();
+  
+  const countryOptions = COUNTRIES.map(country => ({
+    value: country.code,
+    label: country.name
+  }));
+
+  const handleCountryChange = (countryCode) => {
+    getHeadlines(countryCode);
+  };
 
   return (
-    <select
-      onChange={(e) => getHeadlines(e.target.value)}
-      className="px-4 py-2 border border-gray-300 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-    >
-      {COUNTRIES.map(country => (
-        <option key={country.code} value={country.code}>
-          {country.name}
-        </option>
-      ))}
-    </select>
+    <Dropdown
+      options={countryOptions}
+      value={currentCountry}
+      onChange={handleCountryChange}
+      className="w-48"
+    />
   );
 };
 
